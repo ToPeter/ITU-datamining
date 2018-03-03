@@ -1,0 +1,82 @@
+\documentclass{article}
+
+\usepackage[T1]{fontenc} % Better support for characters with accents
+% and non-English characters
+\usepackage[utf8]{inputenc} % Define the input encoding of your document.
+% In this case 'utf8'
+\usepackage{lmodern} % Latin Modern font (optional)
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+\usepackage{float}
+
+
+\title{Mandatory Individual Assignment - Data Mining}
+\author{by Lucas Klafke Beck}
+
+\begin{document}
+\maketitle
+
+\section* {Questions}
+
+The questions explored by this report in the data set are presented below:
+\begin{itemize}
+  \item Is it possible to determine the student degree based on his/her other interests?
+  \item Can we cluster students in a meaningful way in terms of their gender by looking into their available physical characteristics (shoe size and height)?
+  \item Can we find patterns on the games the student have played (e.g if played Fifa, also played counter strike)?
+\end{itemize}
+
+\section* {Data preprocessing}
+
+Whenever loading the data, some precautions were taken for all the attributes. For non-numeric attributes which had open text entries, numeric characters were removed, case was disregarded and all the possible valid answers were considered. For instance, in gender all "m", "man" and "male" were considered to be valid.
+
+For physical characteristics numeric fields, some constraints were also established. Non-numeric values were removed and physical constraints added. For instance, height was only considered if between 55 and 280, based on historical data.
+
+\subsection* {Filling missing values}
+After the initial parsing, some values were missing for height and shoe size. Thus, the median value within gender for those attributes was used for all tuples who had missing values. For instance, if a tuple had gender male and missing height, the median of the height across all male students was used. This was done given that this attributes are used to cluster according to gender (intended result). 
+
+This bias the data towards the intended result. However, with missing data some compromises have to be taken one way or the other. Moreover, since the number of data points with missing values was small, the effect of the bias was also.
+
+\subsection* {Ignored tuples}
+Students that marked "none" for games were removed from the Apriori analysis since they were not relevant for this analysis. Students who had no valid gender were removed from the clustering analysis.
+
+\subsection* {Normalization}
+All numeric values were normalized in values between 0 and 1 using the min-max normalization technique.
+
+
+\section* {Analysis and Results}
+\subsection* {Student degree based on interests }
+For the K-nearest neighbors, the euclidean distance was used in order to determine similarity between tuples. Since all the attributes concerning students interest had an order starting in "not interested" and ending in "very interesting", each possible value was given a numeric equivalent between -0.5 and +0.5. The values were equally distributed in this scale. That way, a student having "not interested" is closer to a student having "sounds interesting" than to another having "very interesting". Moreover, 2/3 of the data were used as training set and the rest as the test set. The data was also randomized before every run.
+
+In order to evaluate how good the algorithm is in answering the question, the measure used was accuracy. The reason is that there is more than one category that a student degree may fall in. Thus, it is not possible to use sensitivity or specificity given there are no positives or negatives in this case. After running the algorithm 200 times and taking the average for neighbors from 1 to 50, the following accuracy plot was generated As shown in figure 1.
+\begin{figure}[h]
+\includegraphics [scale=0.8]{Accuracy}
+\centering
+\label{fig:diagram1}
+\caption{k vs Accuracy}
+\end{figure}
+The best k for the model is at \begin {math} k = 7 \end {math} and has 37\% accuracy. This shows that using only the interest of students does as independent variables, does not give us a good prediction tool for the degree. Even further, The degree which the student is in, does not tell us which topics he/she is interest within data mining.
+
+\subsection* {Clustering students on height and shoeSize}
+The clusters are represented in figure 2. As expected, the clusters do not fully represent the gender. The algorithm was trained using only age and shoe size data, and even though it is known that man in general have higher measures than women, there are exceptions. However, from the 11 girls on the dataset only one (9\%) was classified in a different cluster. For man, around 18 \% stayed out of the male dominant cluster. Therefore, it is possible to conclude that clustering students by shoe size and height with k = 2 gives an good approximate distinction across gender among clusters.
+\begin{figure}[H]
+\includegraphics [scale=0.8]{Clusters}
+\centering
+\label{fig:diagram2}
+\caption{Clusters representation}
+\end{figure}
+
+\subsection* {Pattern Mining on Games}
+When looking at the patterns within the game sequence, I was interested in those rules with high confidence. Thus, I could see if playing certain game(s) would most likely mean that you play some other(s). Thus, I set the confidence with a high threshold of 85 \% and a relatively low support of 14 \% . This means that catching games that may not occur much, but when they do, in 85\% of times they will lead to other games. My finds are presented below:
+\newline
+\newline
+battlefield 4 \begin{math} \rightarrow \end{math} counter strike go
+\newline
+counter strike go, wordfeud \begin{math} \rightarrow \end{math} minecraft
+\newline
+fifa 2017, candy crush \begin{math} \rightarrow \end{math}  angry birds
+\newline
+stanley parable \begin{math} \rightarrow \end{math}  minecraft
+\newline
+farm Ville, candy crush \begin{math} \rightarrow \end{math}  angry birds
+\newline
+\end{document}
