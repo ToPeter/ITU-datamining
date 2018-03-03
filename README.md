@@ -1,2 +1,2 @@
-# ITU_data_mining_course
-This repo contains some of the code I implemented during the data mining course at ITU
+# ITU data mining course
+This repo contains some of the code I implemented during the data mining course at ITU. You can find some popular data mining algorithms implementations that I did in Java inside the "Mandatory individual assigment" folder
